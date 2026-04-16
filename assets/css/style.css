@@ -896,7 +896,7 @@ transition: opacity .3s ease, transform .3s ease;
 
 /* ספציפית ללק ג׳ל */
 .service-gel::before {
-background-image: url("icons/image.jpg");
+background-image: url("icons/image1.jpg");
 }
 
 /* Hover */
@@ -910,3 +910,72 @@ box-shadow: 0 20px 60px rgba(255, 92, 168, 0.08);
 opacity: 0.3;
 transform: scale(1.08);
 }
+/* ===== SERVICE CARD WITH FULL IMAGE ===== */
+
+.service-card {
+position: relative;
+height: 170px;
+border-radius: 22px;
+overflow: hidden;
+border: 1px solid #1f1f26;
+background-color: #121218;
+cursor: pointer;
+
+display: flex;
+align-items: flex-end;
+justify-content: center;
+
+transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* התמונה ממלאת את כל הכפתור */
+.service-card::before {
+content: "";
+position: absolute;
+inset: 0;
+
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+
+opacity: 0.85;
+transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+/* שכבת כהות לקריאות הטקסט */
+.service-card::after {
+content: "";
+position: absolute;
+inset: 0;
+background: linear-gradient(
+to top,
+rgba(0,0,0,0.55),
+rgba(0,0,0,0.15)
+);
+}
+
+/* טקסט */
+.service-title {
+position: relative;
+z-index: 2;
+padding-bottom: 18px;
+font-size: 18px;
+font-weight: 500;
+}
+
+/* ✅ כאן שמים את שם התמונה */
+.service-gel::before {
+background-image: url("icons/image1.jpg");
+}
+
+/* Hover יוקרתי */
+.service-card:hover {
+transform: translateY(-6px);
+box-shadow: 0 20px 60px rgba(255, 92, 168, 0.15);
+}
+
+.service-card:hover::before {
+transform: scale(1.05);
+opacity: 1;
+}
+``
