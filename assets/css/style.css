@@ -965,7 +965,7 @@ font-weight: 500;
 
 /* ✅ כאן שמים את שם התמונה */
 .service-gel::before {
-background-image: url("icons/image1.jpg");
+background-image: url("icons/image1.jpg/");
 }
 
 /* Hover יוקרתי */
