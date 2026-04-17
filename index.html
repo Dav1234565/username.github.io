@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Rotem Cosmetics</title>
     <meta name="description" content="Rotem Cosmetics - סטודיו לציפורניים בפתח תקווה">
-    <link rel="stylesheet" href="../Asserts/Style.Css.html">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -109,49 +109,81 @@
             <!-- THUMB STRIP (רצועה בגלילה) -->
             <div class="pro-thumbs" id="thumbs" role="list" aria-label="תמונות ממוזערות">
                 <button class="pro-thumb is-active" type="button" role="listitem"
-                        data-src="img/1.jpeg" data-caption="תמונה 1" aria-label="בחר תמונה 1">
-                    <img src="img/1.jpeg" alt="תמונה 1">
-                </button>
-                <button class="pro-thumb" type="button" role="listitem"
-                        data-src="img/2.jpeg" data-caption="תמונה 2" aria-label="בחר תמונה 2">
-                    <img src="img/2.jpeg" alt="תמונה 2">
-                </button>
-                <button class="pro-thumb" type="button" role="listitem"
-                        data-src="img/3.jpeg" data-caption="תמונה 3" aria-label="בחר תמונה 3">
-                    <img src="img/3.jpeg" alt="תמונה 3">
-                </button>
-                <button class="pro-thumb" type="button" role="listitem"
-                        data-src="img/4.jpeg" data-caption="תמונה 4" aria-label="בחר תמונה 4">
-                    <img src="img/4.jpeg" alt="תמונה 4">
-                </button>
-                <button class="pro-thumb" type="button" role="listitem"
-                        data-src="img/5.jpeg" data-caption="תמונה 5" aria-label="בחר תמונה 5">
-                    <img src="img/5.jpeg" alt="תמונה 5">
-                </button>
-                <button class="pro-thumb" type="button" role="listitem"
-                        data-src="img/6.jpeg" data-caption="תמונה 6" aria-label="בחר תמונה 6">
-                    <img src="img/6.jpeg" alt="תמונה 6">
-                </button>
-                <button class="pro-thumb" type="button" role="listitem"
-                        data-src="img/7.jpeg" data-caption="תמונה 7" aria-label="בחר תמונה 7">
-                    <img src="img/7.jpeg" alt="תמונה 7">
-                </button>
+                        data-src="img/1.jpeg" data-caption="תמונה 1" aria-label="בחר תמונה 1n="תמונה 2" aria-label="בחר תמונה 2"img/3.jpeg" data-caption="תמונה 3" aria-label="בחר תמונה 3"img/4.jpeg" data-caption="תמונה 4" aria-label="בחר תמונה 4"img/5.jpeg" data-caption="תמונה 5" aria-label="בחר תמונה 5"img/6.jpeg" data-caption="תמונה 6" aria-label="בחר תמונה 6"img/7.jpeg" data-caption="תמונה 7" aria-label="בחר תמונה 7/div>
             </div>
-        </div>
-    </div>
 </section>
 
-<!-- ===== FULLSCREEN IMAGE MODAL ===== -->
-<div class="img-modal" id="imgModal" aria-hidden="true">
-    <div class="img-modal__backdrop" id="imgClose"></div>
-    <div class="img-modal__content">
-        <button class="img-modal__close" id="imgCloseBtn" type="button" aria-label="סגור">✕</button>
-        <button class="img-modal__nav img-modal__nav--prev" id="imgPrev" type="button" aria-label="תמונה קודמת">→</button>
-        <button class="img-modal__nav img-modal__nav--next" id="imgNext" type="button" aria-label="תמונה הבאה">←</button>
-        <img id="imgModalImg" src="" alt="">
-        <div class="img-modal__caption" id="imgModalCaption"></div>
-    </div>
-</div>
+
+<!-- ===== GALLERY SCRIPT ===== -->
+<script>
+    (function () {
+      const thumbsWrap = document.getElementById("thumbs");
+      const mainImg = document.getElementById("mainImg");
+      const mainCaption = document.getElementById("mainCaption");
+      const mainCounter = document.getElementById("mainCounter");
+      const mainOpen = document.getElementById("mainOpen");
+
+      const imgModal = document.getElementById("imgModal");
+      const imgModalImg = document.getElementById("imgModalImg");
+      const imgModalCaption = document.getElementById("imgModalCaption");
+      const imgClose = document.getElementById("imgClose");
+      const imgCloseBtn = document.getElementById("imgCloseBtn");
+
+      if (!thumbsWrap || !mainImg || !mainCaption || !mainCounter || !mainOpen) return;
+
+      const thumbButtons = Array.from(thumbsWrap.querySelectorAll(".pro-thumb"));
+      const total = thumbButtons.length;
+
+      function setActive(index) {
+        const btn = thumbButtons[index];
+        if (!btn) return;
+
+        thumbButtons.forEach(b => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+
+        const src = btn.dataset.src;
+        const cap = btn.dataset.caption || "";
+
+        mainImg.src = src;
+        mainImg.alt = cap || "תמונה";
+        mainCaption.textContent = cap;
+        mainCounter.textContent = `${index + 1} / ${total}`;
+
+        // שמירה למסך מלא
+        mainOpen.dataset.src = src;
+        mainOpen.dataset.caption = cap;
+
+        // גלילה עדינה לממוזערת הנבחרת
+        btn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+
+      thumbButtons.forEach((btn, idx) => btn.addEventListener("click", () => setActive(idx)));
+      if (total) setActive(0);
+
+      function openImgModal() {
+        const src = mainOpen.dataset.src || mainImg.src;
+        const cap = mainOpen.dataset.caption || mainCaption.textContent || "";
+        imgModalImg.src = src;
+        imgModalCaption.textContent = cap;
+        imgModal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeImgModal() {
+        imgModal.setAttribute("aria-hidden", "true");
+        imgModalImg.src = "";
+        document.body.style.overflow = "";
+      }
+
+      mainOpen.addEventListener("click", openImgModal);
+      imgClose && imgClose.addEventListener("click", closeImgModal);
+      imgCloseBtn && imgCloseBtn.addEventListener("click", closeImgModal);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeImgModal();
+      });
+    })();
+</script>
 
             <!-- CONTACT -->
                 <section id="contact" class="section dark">
@@ -194,7 +226,6 @@
                     <p>© Rotem Cosmetics</p>
                 </footer>
 
-                <script src="../Js/Script.Js.html"></script>
                 <script>
                     // ===== SERVICES POPUP =====
                     const serviceModal = document.getElementById("serviceModal");
@@ -218,203 +249,72 @@
                     document.querySelector(".modal-close").addEventListener("click", closeServiceModal);
                     document.querySelector(".modal-overlay").addEventListener("click", closeServiceModal);
 
-                    // ===== PRO GALLERY WITH NAVIGATION =====
-                    (function() {
-                      const thumbsWrap = document.getElementById("thumbs");
-                      const mainImg = document.getElementById("mainImg");
-                      const mainCaption = document.getElementById("mainCaption");
-                      const mainCounter = document.getElementById("mainCounter");
-                      const mainOpen = document.getElementById("mainOpen");
+                    // ===== PRO GALLERY =====
+                    const thumbsWrap = document.getElementById("thumbs");
+                    const mainImg = document.getElementById("mainImg");
+                    const mainCaption = document.getElementById("mainCaption");
+                    const mainCounter = document.getElementById("mainCounter");
+                    const mainOpen = document.getElementById("mainOpen");
 
-                      const imgModal = document.getElementById("imgModal");
-                      const imgModalImg = document.getElementById("imgModalImg");
-                      const imgModalCaption = document.getElementById("imgModalCaption");
-                      const imgClose = document.getElementById("imgClose");
-                      const imgCloseBtn = document.getElementById("imgCloseBtn");
-                      const imgPrev = document.getElementById("imgPrev");
-                      const imgNext = document.getElementById("imgNext");
+                    const thumbButtons = thumbsWrap ? Array.from(thumbsWrap.querySelectorAll(".pro-thumb")) : [];
+                    const total = thumbButtons.length;
 
-                      if (!thumbsWrap || !mainImg || !mainCaption || !mainCounter || !mainOpen) return;
+                    function setActive(index){
+                      const btn = thumbButtons[index];
+                      if(!btn) return;
 
-                      const thumbButtons = Array.from(thumbsWrap.querySelectorAll(".pro-thumb"));
-                      const total = thumbButtons.length;
-                      let currentIndex = 0;
-                      let isTransitioning = false;
+                      thumbButtons.forEach(b => b.classList.remove("is-active"));
+                      btn.classList.add("is-active");
 
-                      // Preload תמונות לביצועים טובים יותר
-                      function preloadImages() {
-                        thumbButtons.forEach(btn => {
-                          const img = new Image();
-                          img.src = btn.dataset.src;
-                        });
+                      const src = btn.dataset.src;
+                      const cap = btn.dataset.caption || "";
+
+                      mainImg.src = src;
+                      mainImg.alt = cap || "עבודת ציפורניים";
+                      mainCaption.textContent = cap;
+                      mainCounter.textContent = `${index + 1} / ${total}`;
+
+                      mainOpen.dataset.src = src;
+                      mainOpen.dataset.caption = cap;
+
+                      btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"});
+                    }
+
+                    thumbButtons.forEach((btn, idx) => btn.addEventListener("click", () => setActive(idx)));
+                    if(total) setActive(0);
+
+                    // ===== GALLERY FULLSCREEN MODAL =====
+                    const imgModal = document.getElementById("imgModal");
+                    const imgModalImg = document.getElementById("imgModalImg");
+                    const imgModalCaption = document.getElementById("imgModalCaption");
+                    const imgClose = document.getElementById("imgClose");
+                    const imgCloseBtn = document.getElementById("imgCloseBtn");
+
+                    function openImgModal(){
+                      const src = mainOpen.dataset.src || mainImg.src;
+                      const cap = mainOpen.dataset.caption || mainCaption.textContent || "";
+                      imgModalImg.src = src;
+                      imgModalCaption.textContent = cap;
+                      imgModal.setAttribute("aria-hidden","false");
+                      document.body.style.overflow = "hidden";
+                    }
+
+                    function closeImgModal(){
+                      imgModal.setAttribute("aria-hidden","true");
+                      imgModalImg.src = "";
+                      document.body.style.overflow = "";
+                    }
+
+                    mainOpen.addEventListener("click", openImgModal);
+                    imgClose.addEventListener("click", closeImgModal);
+                    imgCloseBtn.addEventListener("click", closeImgModal);
+
+                    document.addEventListener("keydown", (e) => {
+                      if (e.key === "Escape") {
+                        closeServiceModal();
+                        closeImgModal();
                       }
-                      preloadImages();
-
-                      function setActive(index, smooth = true){
-                        if (isTransitioning) return;
-                        if (index < 0) index = total - 1;
-                        if (index >= total) index = 0;
-                        
-                        isTransitioning = true;
-                        currentIndex = index;
-                        const btn = thumbButtons[index];
-                        if(!btn) {
-                          isTransitioning = false;
-                          return;
-                        }
-
-                        thumbButtons.forEach(b => b.classList.remove("is-active"));
-                        btn.classList.add("is-active");
-
-                        const src = btn.dataset.src;
-                        const cap = btn.dataset.caption || "";
-
-                        // אנימציית fade לתמונה הראשית
-                        if (smooth) {
-                          mainImg.style.opacity = "0.5";
-                          setTimeout(() => {
-                            mainImg.src = src;
-                            mainImg.alt = cap || "עבודת ציפורניים";
-                            mainImg.style.opacity = "1";
-                          }, 150);
-                        } else {
-                          mainImg.src = src;
-                          mainImg.alt = cap || "עבודת ציפורניים";
-                        }
-
-                        mainCaption.textContent = cap;
-                        mainCounter.textContent = `${index + 1} / ${total}`;
-
-                        mainOpen.dataset.src = src;
-                        mainOpen.dataset.caption = cap;
-
-                        btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"});
-                        
-                        setTimeout(() => {
-                          isTransitioning = false;
-                        }, 200);
-                      }
-
-                      thumbButtons.forEach((btn, idx) => btn.addEventListener("click", () => setActive(idx)));
-                      if(total) setActive(0, false);
-
-                      // ===== GALLERY FULLSCREEN MODAL WITH NAVIGATION =====
-                      function openImgModal(){
-                        if (!imgModal || !imgModalImg) return;
-                        const src = mainOpen.dataset.src || mainImg.src;
-                        const cap = mainOpen.dataset.caption || mainCaption.textContent || "";
-                        imgModalImg.src = src;
-                        imgModalCaption.textContent = cap;
-                        imgModal.setAttribute("aria-hidden","false");
-                        document.body.style.overflow = "hidden";
-                      }
-
-                      function closeImgModal(){
-                        if (!imgModal) return;
-                        imgModal.setAttribute("aria-hidden","true");
-                        setTimeout(() => {
-                          imgModalImg.src = "";
-                        }, 300);
-                        document.body.style.overflow = "";
-                      }
-
-                      function navigateGallery(direction) {
-                        if (isTransitioning) return;
-                        const newIndex = currentIndex + direction;
-                        setActive(newIndex);
-                        
-                        // עדכון התמונה במסך מלא אם הוא פתוח
-                        if (imgModal && imgModal.getAttribute("aria-hidden") === "false") {
-                          const btn = thumbButtons[currentIndex];
-                          if (btn) {
-                            imgModalImg.style.opacity = "0.5";
-                            setTimeout(() => {
-                              imgModalImg.src = btn.dataset.src;
-                              imgModalCaption.textContent = btn.dataset.caption || "";
-                              imgModalImg.style.opacity = "1";
-                            }, 150);
-                          }
-                        }
-                      }
-
-                      mainOpen.addEventListener("click", openImgModal);
-                      if (imgClose) imgClose.addEventListener("click", closeImgModal);
-                      if (imgCloseBtn) imgCloseBtn.addEventListener("click", closeImgModal);
-                      if (imgPrev) imgPrev.addEventListener("click", () => navigateGallery(1));
-                      if (imgNext) imgNext.addEventListener("click", () => navigateGallery(-1));
-
-                      // תמיכה במקלדת
-                      document.addEventListener("keydown", (e) => {
-                        if (e.key === "Escape") {
-                          closeServiceModal();
-                          closeImgModal();
-                        }
-                        
-                        // ניווט עם חיצים במסך מלא
-                        if (imgModal && imgModal.getAttribute("aria-hidden") === "false") {
-                          if (e.key === "ArrowLeft") {
-                            e.preventDefault();
-                            navigateGallery(-1);
-                          } else if (e.key === "ArrowRight") {
-                            e.preventDefault();
-                            navigateGallery(1);
-                          }
-                        }
-                      });
-
-                      // תמיכה בסוייפ במובייל
-                      let touchStartX = 0;
-                      let touchEndX = 0;
-
-                      if (imgModal) {
-                        imgModal.addEventListener("touchstart", (e) => {
-                          touchStartX = e.changedTouches[0].screenX;
-                        }, { passive: true });
-
-                        imgModal.addEventListener("touchend", (e) => {
-                          touchEndX = e.changedTouches[0].screenX;
-                          handleSwipe();
-                        }, { passive: true });
-                      }
-
-                      function handleSwipe() {
-                        const swipeThreshold = 50;
-                        if (touchEndX < touchStartX - swipeThreshold) {
-                          navigateGallery(-1); // סוייפ שמאלה
-                        }
-                        if (touchEndX > touchStartX + swipeThreshold) {
-                          navigateGallery(1); // סוייפ ימינה
-                        }
-                      }
-
-                      // אוטומטי: החלפת תמונות כל 5 שניות (אופציונלי - ניתן להסיר)
-                      let autoPlayInterval;
-                      function startAutoPlay() {
-                        autoPlayInterval = setInterval(() => {
-                          if (imgModal && imgModal.getAttribute("aria-hidden") === "true") {
-                            navigateGallery(1);
-                          }
-                        }, 5000);
-                      }
-
-                      function stopAutoPlay() {
-                        if (autoPlayInterval) {
-                          clearInterval(autoPlayInterval);
-                        }
-                      }
-
-                      // התחל autoplay (הסר את השורה הזו אם לא רוצה autoplay)
-                      // startAutoPlay();
-
-                      // עצור autoplay כשעוברים על הגלריה
-                      const gallery = document.querySelector(".pro-gallery");
-                      if (gallery) {
-                        gallery.addEventListener("mouseenter", stopAutoPlay);
-                        gallery.addEventListener("mouseleave", () => {
-                          // startAutoPlay(); // הסר הערה אם רוצה autoplay
-                        });
-                      }
-                    })();
+                    });
                 </script>
 </body>
 </html>
