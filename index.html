@@ -109,7 +109,7 @@
 
             <!-- THUMB STRIP -->
             <div class="pro-thumbs" id="thumbs" role="list" aria-label="תמונות ממוזערות">
-                <button class="pro-thumb is-active" type="button" role="listitem" data-src="img/1.jpeg" data-caption="תמונה 1" aria-label="בחר תמונה 1="בחר תמונה 4img/5.jpeg" data-caption="תמונה 5" aria-label="בחר תמונה 5img/6.jpeg" data-caption="תמונה 6" aria-label="בחר תמונה 6img/7.jpeg" data-caption="תמונה 7" aria-label="בחר תמונה 7Y) -->
+                <button class="pro-thumb is-active" type="button" role="listitem" data-src="img/1.jpeg" data-caption="תמונה 1" aria-label="בחר תמונה 1=בחר תמונה 4img/5.jpeg" data-caption="תמונה 5" aria-label="בחר תמונה 5img/6.jpeg" data-caption="תמונה 6" aria-label="בחר תמונה 6img/7.jpeg" data-caption="תמונה 7" aria-label="בחר תמונה 7Y) -->
                 <div class="img-modal" id="imgModal" aria-hidden="true">
                     <div class="img-modal__backdrop" id="imgClose"></div>
                     <div class="img-modal__content" role="dialog" aria-modal="true" aria-label="תמונה במסך מלא">
@@ -165,7 +165,7 @@
                     const serviceModal = document.getElementById("serviceModal");
                     const modalTitle = document.getElementById("modalTitle");
                     const modalText = document.getElementById("modalText");
-                  
+
                     document.querySelectorAll(".service-card").forEach(card => {
                       card.addEventListener("click", () => {
                         modalTitle.textContent = card.dataset.title || "";
@@ -174,56 +174,56 @@
                         serviceModal.setAttribute("aria-hidden", "false");
                       });
                     });
-                  
+
                     const closeServiceModal = () => {
                       serviceModal.classList.remove("active");
                       serviceModal.setAttribute("aria-hidden", "true");
                     };
-                  
+
                     document.querySelector(".modal-close").addEventListener("click", closeServiceModal);
                     document.querySelector(".modal-overlay").addEventListener("click", closeServiceModal);
-                  
+
                     // ===== PRO GALLERY =====
                     const thumbsWrap = document.getElementById("thumbs");
                     const mainImg = document.getElementById("mainImg");
                     const mainCaption = document.getElementById("mainCaption");
                     const mainCounter = document.getElementById("mainCounter");
                     const mainOpen = document.getElementById("mainOpen");
-                  
+
                     const thumbButtons = thumbsWrap ? Array.from(thumbsWrap.querySelectorAll(".pro-thumb")) : [];
                     const total = thumbButtons.length;
-                  
+
                     function setActive(index){
                       const btn = thumbButtons[index];
                       if(!btn) return;
-                  
+
                       thumbButtons.forEach(b => b.classList.remove("is-active"));
                       btn.classList.add("is-active");
-                  
+
                       const src = btn.dataset.src;
                       const cap = btn.dataset.caption || "";
-                  
+
                       mainImg.src = src;
                       mainImg.alt = cap || "עבודת ציפורניים";
                       mainCaption.textContent = cap;
                       mainCounter.textContent = `${index + 1} / ${total}`;
-                  
+
                       mainOpen.dataset.src = src;
                       mainOpen.dataset.caption = cap;
-                  
+
                       btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"});
                     }
-                  
+
                     thumbButtons.forEach((btn, idx) => btn.addEventListener("click", () => setActive(idx)));
                     if(total) setActive(0);
-                  
+
                     // ===== GALLERY FULLSCREEN MODAL =====
                     const imgModal = document.getElementById("imgModal");
                     const imgModalImg = document.getElementById("imgModalImg");
                     const imgModalCaption = document.getElementById("imgModalCaption");
                     const imgClose = document.getElementById("imgClose");
                     const imgCloseBtn = document.getElementById("imgCloseBtn");
-                  
+
                     function openImgModal(){
                       const src = mainOpen.dataset.src || mainImg.src;
                       const cap = mainOpen.dataset.caption || mainCaption.textContent || "";
@@ -232,17 +232,17 @@
                       imgModal.setAttribute("aria-hidden","false");
                       document.body.style.overflow = "hidden";
                     }
-                  
+
                     function closeImgModal(){
                       imgModal.setAttribute("aria-hidden","true");
                       imgModalImg.src = "";
                       document.body.style.overflow = "";
                     }
-                  
+
                     mainOpen.addEventListener("click", openImgModal);
                     imgClose.addEventListener("click", closeImgModal);
                     imgCloseBtn.addEventListener("click", closeImgModal);
-                  
+
                     document.addEventListener("keydown", (e) => {
                       if (e.key === "Escape") {
                         closeServiceModal();
@@ -252,4 +252,3 @@
                 </script>
 </body>
 </html>
-``
