@@ -124,10 +124,10 @@ box-shadow: 0 0 22px rgba(255,92,168,0.35), 0 20px 40px rgba(0,0,0,0.6);
 /* ===== ICONS / IMAGES PER SERVICE ===== */
 /* שים לב: style.css בתוך assets/css ולכן הנתיב הוא ../../icons/... */
 .service-gel      { --service-bg: url("../../icons/image1.jpg"); }
-.service-build    { --service-bg: url("../../icons/image (1).jpg"); }
-.service-manicure { --service-bg: url("../../icons/image (2).jpg"); }
-.service-pedicure { --service-bg: url("../../icons/image (3).jpg"); }
-.service-design   { --service-bg: url("../../icons/image (4).jpg"); }
+.service-build    { --service-bg: url("../../icons/image2.jpg"); }
+.service-manicure { --service-bg: url("../../icons/image3.jpg"); }
+.service-pedicure { --service-bg: url("../../icons/image4.jpg"); }
+.service-design   { --service-bg: url("../../icons/image5.jpg"); }
 ``
 
 /* Glow */
