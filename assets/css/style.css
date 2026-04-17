@@ -1,366 +1,113 @@
-/* =====================
-RESET & BASE
-===================== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+// שנה בפוטר
+document.getElementById("year").textContent = new Date().getFullYear();
 
-html, body {
-font-family: Arial, sans-serif;
-font-size: 16px;
-background: #0e0e12;
-color: #ffffff;
-line-height: 1.6;
+// תפריט מובייל
+const toggle = document.querySelector(".navToggle");
+const nav = document.querySelector(".nav");
+
+if (toggle && nav) {
+toggle.addEventListener("click", () => {
+const isOpen = nav.classList.toggle("open");
+toggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+nav.querySelectorAll("a").forEach(a => {
+a.addEventListener("click", () => {
+nav.classList.remove("open");
+toggle.setAttribute("aria-expanded", "false");
+});
+});
 }
 
-/* =====================
-LAYOUT
-===================== */
-.container { width: 90%; max-width: 1100px; margin: auto; }
-.section { padding: 60px 0; }
-.section.dark { background: #16161d; }
+// WhatsApp — מספר בפורמט בינלאומי (ישראל 972 + בלי 0)
+const WHATSAPP_PHONE = "972522752249"; // 052-2752249
 
-/* =====================
-HEADER
-===================== */
-.header { background: #000; padding: 20px 0; border-bottom: 1px solid #222; }
-.logo { font-size: 22px; }
-.nav { margin-top: 10px; }
-.nav a { color: #fff; margin-left: 15px; text-decoration: none; }
+function buildWhatsAppLink(name, service, when) {
+const lines = [
+"היי רותם! אשמח לקבוע תור 😊",
+name ? `שם: ${name}` : null,
+service ? `שירות: ${service}` : null,
+when ? `מועד מועדף: ${when}` : null
+].filter(Boolean);
 
-/* =====================
-HERO
-===================== */
-.hero { text-align: center; padding: 80px 0; }
-.hero h2 { font-size: 32px; margin-bottom: 10px; }
-.hero p { color: #ccc; margin-bottom: 20px; }
-
-/* =====================
-BUTTONS
-===================== */
-.buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-.btn {
-padding: 12px 18px;
-border: 1px solid #fff;
-color: #fff;
-text-decoration: none;
-border-radius: 8px;
-display: inline-block;
-}
-.btn.primary { background: #ff5ca8; border-color: #ff5ca8; }
-
-/* =====================
-SERVICES
-===================== */
-.services-lux {
-background: radial-gradient(600px 400px at top right, rgba(255,255,255,0.05), transparent 70%);
-}
-.services-header { max-width: 420px; margin-bottom: 40px; }
-.services-header h2 { font-size: 28px; margin-bottom: 8px; }
-.services-header p { color: #9a9a9a; font-size: 15px; }
-
-.services-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-gap: 24px;
+const text = encodeURIComponent(lines.join("\n"));
+return `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
 }
 
-/* ===== SERVICE CARDS (ONE CLEAN SOLUTION) ===== */
-.service-card{
-position: relative;
-height: 180px;
-border-radius: 22px;
-overflow: hidden;
-border: 1px solid #2a2a33;
-cursor: pointer;
+// כפתור וואטסאפ למעלה
+const waTop = document.getElementById("waTop");
+if (waTop) waTop.href = buildWhatsAppLink("", "קביעת תור", "");
 
-display: flex;
-align-items: flex-end;
-justify-content: center;
+// לינק וואטסאפ בפרטים
+const waInline = document.getElementById("waInline");
+if (waInline) waInline.href = buildWhatsAppLink("", "קביעת תור", "");
 
-background: linear-gradient(180deg, #2e2e34 0%, #1d1d22 100%);
-transition: transform .3s ease, box-shadow .3s ease;
-
---service-bg: none; /* כל כפתור יקבל תמונה דרך משתנה */
+// טופס וואטסאפ
+const waForm = document.getElementById("waForm");
+if (waForm) {
+waForm.addEventListener("submit", (e) => {
+e.preventDefault();
+const name = document.getElementById("name")?.value?.trim();
+const service = document.getElementById("service")?.value?.trim();
+const when = document.getElementById("when")?.value?.trim();
+const url = buildWhatsAppLink(name, service, when);
+window.open(url, "_blank", "noopener");
+});
 }
 
-.service-card::before{
-content:"";
-position:absolute;
-inset:0;
+// גלריה מודאלית
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modalImg");
 
-background-image: var(--service-bg);
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
-
-z-index: 1;
-opacity: .95;
+function openModal(src) {
+if (!modal || !modalImg) return;
+modalImg.src = src;
+modal.setAttribute("aria-hidden", "false");
+document.body.style.overflow = "hidden";
 }
 
-.service-card::after{
-content:"";
-position:absolute;
-inset:0;
-
-background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0.25));
-z-index: 2;
+function closeModal() {
+if (!modal) return;
+modal.setAttribute("aria-hidden", "true");
+document.body.style.overflow = "";
+if (modalImg) modalImg.src = "";
 }
 
-.service-title{
-position: relative;
-z-index: 3;
-padding-bottom: 18px;
-font-size: 18px;
-font-weight: 500;
+document.querySelectorAll(".gItem").forEach(btn => {
+btn.addEventListener("click", () => {
+const src = btn.getAttribute("data-img");
+if (src) openModal(src);
+});
+});
+
+if (modal) {
+modal.addEventListener("click", (e) => {
+const t = e.target;
+if (t?.getAttribute?.("data-close") === "true") closeModal();
+});
 }
 
-.service-card.glow:hover{
-transform: translateY(-6px);
-box-shadow: 0 0 22px rgba(255,92,168,0.35), 0 20px 40px rgba(0,0,0,0.6);
-}
+document.addEventListener("keydown", (e) => {
+if (e.key === "Escape") closeModal();
+});
+``
+const modal = document.getElementById("serviceModal");
+const modalTitle = document.getElementById("modalTitle");
+const modalText = document.getElementById("modalText");
 
-/* ===== ICONS / IMAGES PER SERVICE ===== */
-/* style.css נמצא ב-assets/css לכן הנתיב הוא ../../icons/... */
-.service-gel      { --service-bg: url("../../icons/image1.jpg"); }
-.service-build    { --service-bg: url("../../icons/image2.jpg"); }
-.service-manicure { --service-bg: url("../../icons/image3.jpg"); }
-.service-pedicure { --service-bg: url("../../icons/image4.jpg"); }
-.service-design   { --service-bg: url("../../icons/image5.jpg"); }
+document.querySelectorAll(".service-card").forEach(card => {
+card.addEventListener("click", () => {
+modalTitle.textContent = card.dataset.title;
+modalText.textContent = card.dataset.text;
+modal.classList.add("active");
+});
+});
 
-/* =====================
-MODAL (SERVICES POPUP)
-===================== */
-.modal { position: fixed; inset: 0; display: none; z-index: 1000; }
-.modal.active { display: block; }
-.modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); }
+document.querySelector(".modal-close").addEventListener("click", () => {
+modal.classList.remove("active");
+});
 
-.modal-box {
-position: relative;
-width: min(460px, 92%);
-margin: 14vh auto;
-background: #121218;
-border: 1px solid #2a2a33;
-border-radius: 18px;
-padding: 26px 22px;
-box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-animation: fadeUp .25s ease;
-}
-
-@keyframes fadeUp {
-from { opacity: 0; transform: translateY(18px); }
-to   { opacity: 1; transform: translateY(0); }
-}
-
-.modal-box h3 { margin-bottom: 10px; }
-.modal-box p { color: #b7b7b7; line-height: 1.6; }
-
-.modal-close {
-position: absolute;
-top: 12px;
-left: 12px;
-background: none;
-border: none;
-color: #aaa;
-font-size: 18px;
-cursor: pointer;
-}
-
-/* =====================
-PRO GALLERY (main + thumbs strip)
-===================== */
-.pro-gallery{
-margin-top: 18px;
-display: grid;
-gap: 14px;
-}
-
-.gallery-head{
-display:flex;
-align-items:flex-end;
-justify-content:space-between;
-gap:12px;
-}
-
-.subtitle { margin-top: 10px; color: #aaa; font-size: 15px; }
-
-/* MAIN */
-.pro-main{
-position: relative;
-border: 1px solid #2a2a33;
-border-radius: 18px;
-overflow: hidden;
-padding: 0;
-background: #101014;
-cursor: pointer;
-}
-
-.pro-main img{
-width: 100%;
-height: min(520px, 52vh);
-object-fit: cover;
-display: block;
-transform: scale(1);
-transition: transform .35s ease;
-}
-
-.pro-main:hover img{ transform: scale(1.02); }
-
-.pro-mainOverlay{
-position:absolute;
-inset: auto 0 0 0;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-padding: 12px 14px;
-color:#fff;
-background: linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,0));
-font-size: 14px;
-}
-
-/* THUMBS STRIP */
-.pro-thumbs{
-display:flex;
-gap:12px;
-overflow-x:auto;
-padding: 8px 4px 10px;
-scroll-snap-type: x mandatory;
--webkit-overflow-scrolling: touch;
-}
-
-.pro-thumbs::-webkit-scrollbar{ height: 10px; }
-.pro-thumbs::-webkit-scrollbar-thumb{ background:#2a2a33; border-radius: 99px; }
-
-.pro-thumb{
-flex: 0 0 auto;
-width: 110px;
-height: 110px;
-border-radius: 16px;
-overflow: hidden;
-border: 1px solid #2a2a33;
-background:#111;
-padding:0;
-cursor:pointer;
-scroll-snap-align: start;
-position: relative;
-}
-
-.pro-thumb img{
-width:100%;
-height:100%;
-object-fit:cover;
-display:block;
-filter: saturate(1.02);
-transition: transform .25s ease;
-}
-
-.pro-thumb:hover img{ transform: scale(1.05); }
-
-.pro-thumb.is-active{
-border-color: #ff5ca8;
-box-shadow: 0 0 18px rgba(255,92,168,.22);
-}
-
-@media (max-width: 600px){
-.pro-thumb{ width: 92px; height: 92px; }
-.pro-main img{ height: min(420px, 45vh); }
-}
-
-/* =====================
-FULLSCREEN IMAGE MODAL (GALLERY)
-===================== */
-.img-modal{
-position: fixed;
-inset: 0;
-display: none;
-z-index: 2000;
-}
-.img-modal[aria-hidden="false"]{ display:block; }
-
-.img-modal__backdrop{
-position:absolute;
-inset:0;
-background: rgba(0,0,0,.78);
-}
-
-.img-modal__content{
-position:absolute;
-top:50%;
-left:50%;
-transform: translate(-50%, -50%);
-width: min(980px, 94%);
-background: #0f0f14;
-border: 1px solid #2a2a33;
-border-radius: 18px;
-padding: 14px;
-box-shadow: 0 30px 90px rgba(0,0,0,.7);
-}
-
-.img-modal__close{
-position:absolute;
-top: 10px;
-left: 10px;
-width: 42px;
-height: 42px;
-border-radius: 14px;
-border: 1px solid #2a2a33;
-background: rgba(255,255,255,.04);
-color:#fff;
-cursor:pointer;
-}
-
-#imgModalImg{
-width:100%;
-max-height: 78vh;
-object-fit: contain;
-display:block;
-border-radius: 14px;
-}
-
-.img-modal__caption{
-margin-top: 10px;
-color: #b7b7b7;
-font-size: 14px;
-text-align: right;
-}
-
-/* =====================
-DIRECTIONS + MAP
-===================== */
-.directions{
-margin-top: 16px;
-display:flex;
-gap: 12px;
-flex-wrap: wrap;
-}
-
-.map-wrap{
-margin-top: 16px;
-border-radius: 16px;
-overflow: hidden;
-border: 1px solid #2a2a33;
-background: #111;
-}
-
-.map-wrap iframe{
-width: 100%;
-height: 320px;
-border: 0;
-display: block;
-}
-
-@media (max-width: 600px){
-.map-wrap iframe{ height: 260px; }
-}
-
-/* =====================
-FOOTER
-===================== */
-.footer { text-align: center; padding: 25px 0; background: #000; color: #888; }
-
-/* =====================
-MOBILE
-===================== */
-@media (max-width: 600px) {
-.buttons { flex-direction: column; }
-.hero h2 { font-size: 26px; }
-}
+document.querySelector(".modal-overlay").addEventListener("click", () => {
+modal.classList.remove("active");
+});
+``
