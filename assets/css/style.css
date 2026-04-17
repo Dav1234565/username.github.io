@@ -130,62 +130,69 @@ gap: 24px;
 /* =====================
 SERVICE CARD WITH IMAGE
 ===================== */
+/* ===== SERVICE CARD – FIXED LAYERS ===== */
+
 .service-card {
 position: relative;
 height: 180px;
 border-radius: 22px;
 overflow: hidden;
-border: 1px solid #1f1f26;
+border: 1px solid #2a2a33;
 background-color: #121218;
 cursor: pointer;
 
 display: flex;
 align-items: flex-end;
 justify-content: center;
+
+transition: transform .3s ease, box-shadow .3s ease;
 }
 
-/* IMAGE */
+/* ✅ התמונה – שכבה תחתונה */
 .service-card::before {
 content: "";
 position: absolute;
 inset: 0;
 
-/* ✅ נתיב נכון */
-background-image: url("/icons/image1.jpg");
+background-image: url("/username.github.io/icons/image.jpg");
 background-size: cover;
 background-position: center;
 background-repeat: no-repeat;
 
-z-index: 0;
+z-index: 1;          /* 🔑 חשוב */
 }
 
-/* DARK OVERLAY */
+/* ✅ שכבת כהות */
 .service-card::after {
 content: "";
 position: absolute;
 inset: 0;
+
 background: linear-gradient(
 to top,
-rgba(0,0,0,0.7),
-rgba(0,0,0,0.15)
+rgba(0,0,0,0.75),
+rgba(0,0,0,0.2)
 );
-z-index: 1;
+z-index: 2;          /* מעל התמונה */
 }
 
-/* TEXT */
+/* ✅ טקסט */
 .service-title {
 position: relative;
-z-index: 2;
+z-index: 3;          /* מעל הכל */
 padding-bottom: 18px;
 font-size: 18px;
 font-weight: 500;
 }
 
-/* HOVER */
-.service-card:hover {
+/* ✅ GLOW + HOVER */
+.service-card.glow:hover {
 transform: translateY(-6px);
-box-shadow: 0 20px 40px rgba(255,92,168,0.2);
+box-shadow:
+0 0 22px rgba(255,92,168,0.35),
+0 20px 40px rgba(0,0,0,0.6);
 }
+
 
 /* =====================
 GALLERY
