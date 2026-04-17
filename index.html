@@ -88,28 +88,102 @@
         <p id="modalText"></p>
     </div>
 </div>
+<!-- ===== GALLERY (PRO) ===== -->
+<section id="gallery" class="section">
+    <div class="container">
+        <div class="gallery-head">
+            <h2>גלריה</h2>
+            <p class="subtitle">עבודות נבחרות</p>
+        </div>
 
-<!--&lt;!&ndash; GALLERY (PRO) &ndash;&gt;-->
-<!--<section id="gallery" class="section">-->
-<!--    <div class="container">-->
-<!--        <div class="gallery-head">-->
-<!--            <h2>גלריה</h2>-->
-<!--            <p class="subtitle">עבודות נבחרות</p>-->
-<!--        </div>-->
+        <div class="pro-gallery" aria-label="גלריית עבודות">
+            <!-- MAIN VIEW -->
+            <button class="pro-main" type="button" id="mainOpen" aria-label="פתח תמונה במסך מלא">
+                <img id="mainImg" src="img/1.jpeg" alt="תמונה 1" loading="eager">
+                <div class="pro-mainOverlay">
+                    <span id="mainCaption">תמונה 1</span>
+                    <span id="mainCounter">1 / 7</span>
+                </div>
+            </button>
 
-<!--        <div class="pro-gallery" aria-label="גלריית עבודות">-->
-<!--            &lt;!&ndash; MAIN VIEW &ndash;&gt;-->
-<!--            <button class="pro-main" type="button" id="mainOpen" aria-label="פתח תמונה במסך מלא">-->
-<!--                img/1.jpeg-->
-<!--                <div class="pro-mainOverlay">-->
-<!--                    <span id="mainCaption">תמונה 1</span>-->
-<!--                    <span id="mainCounter">1 / 7</span>-->
-<!--                </div>-->
-<!--            </button>-->
+            <!-- THUMB STRIP (רצועה בגלילה) -->
+            <div class="pro-thumbs" id="thumbs" role="list" aria-label="תמונות ממוזערות">
+                <button class="pro-thumb is-active" type="button" role="listitem"
+                        data-src="img/1.jpeg" data-caption="תמונה 1" aria-label="בחר תמונה 1n="תמונה 2" aria-label="בחר תמונה 2"img/3.jpeg" data-caption="תמונה 3" aria-label="בחר תמונה 3"img/4.jpeg" data-caption="תמונה 4" aria-label="בחר תמונה 4"img/5.jpeg" data-caption="תמונה 5" aria-label="בחר תמונה 5"img/6.jpeg" data-caption="תמונה 6" aria-label="בחר תמונה 6"img/7.jpeg" data-caption="תמונה 7" aria-label="בחר תמונה 7/div>
+            </div>
+</section>
 
-<!--            &lt;!&ndash; THUMB STRIP &ndash;&gt;thumbs" role="list" aria-label="תמונות ממוזערות">-->
-<!--            <button class="pro-thumb is-active" type="button" role="listitem"-->
-<!--                    data-src="img/1.jpeg" data-caption="תמונה 1" aria-label="בחר תמונה 1    data-src="img/2.jpeg" data-caption="תמונה 2" aria-label="בחר תמונה 2caption="תמונה 3" aria-label="בחר תמונה 3caption="תמונה 4" aria-label="בחר תמונה 4caption="תמונה 5" aria-label="בחר תמונה 5caption="תמונה 6" aria-label="בחר תמונה 6caption="תמונה 7" aria-label="בחר תמונה 7-->
+
+<!-- ===== GALLERY SCRIPT ===== -->
+<script>
+    (function () {
+      const thumbsWrap = document.getElementById("thumbs");
+      const mainImg = document.getElementById("mainImg");
+      const mainCaption = document.getElementById("mainCaption");
+      const mainCounter = document.getElementById("mainCounter");
+      const mainOpen = document.getElementById("mainOpen");
+
+      const imgModal = document.getElementById("imgModal");
+      const imgModalImg = document.getElementById("imgModalImg");
+      const imgModalCaption = document.getElementById("imgModalCaption");
+      const imgClose = document.getElementById("imgClose");
+      const imgCloseBtn = document.getElementById("imgCloseBtn");
+
+      if (!thumbsWrap || !mainImg || !mainCaption || !mainCounter || !mainOpen) return;
+
+      const thumbButtons = Array.from(thumbsWrap.querySelectorAll(".pro-thumb"));
+      const total = thumbButtons.length;
+
+      function setActive(index) {
+        const btn = thumbButtons[index];
+        if (!btn) return;
+
+        thumbButtons.forEach(b => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+
+        const src = btn.dataset.src;
+        const cap = btn.dataset.caption || "";
+
+        mainImg.src = src;
+        mainImg.alt = cap || "תמונה";
+        mainCaption.textContent = cap;
+        mainCounter.textContent = `${index + 1} / ${total}`;
+
+        // שמירה למסך מלא
+        mainOpen.dataset.src = src;
+        mainOpen.dataset.caption = cap;
+
+        // גלילה עדינה לממוזערת הנבחרת
+        btn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+
+      thumbButtons.forEach((btn, idx) => btn.addEventListener("click", () => setActive(idx)));
+      if (total) setActive(0);
+
+      function openImgModal() {
+        const src = mainOpen.dataset.src || mainImg.src;
+        const cap = mainOpen.dataset.caption || mainCaption.textContent || "";
+        imgModalImg.src = src;
+        imgModalCaption.textContent = cap;
+        imgModal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeImgModal() {
+        imgModal.setAttribute("aria-hidden", "true");
+        imgModalImg.src = "";
+        document.body.style.overflow = "";
+      }
+
+      mainOpen.addEventListener("click", openImgModal);
+      imgClose && imgClose.addEventListener("click", closeImgModal);
+      imgCloseBtn && imgCloseBtn.addEventListener("click", closeImgModal);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeImgModal();
+      });
+    })();
+</script>
 
             <!-- CONTACT -->
                 <section id="contact" class="section dark">
