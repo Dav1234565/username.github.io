@@ -1142,3 +1142,7 @@ footer {
     height: 56px;
   }
 }
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
